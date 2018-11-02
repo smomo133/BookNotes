@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_add_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/book_by_internet_search"/>
+    <item
+        android:id="@+id/menu_add_barcode"
+        android:title="@string/barcode_scan"/>
+    <!--
+    <item
+        android:id="@+id/menu_add_direct"
+        android:title="@string/direct_input"/>
+   -->
+</menu>

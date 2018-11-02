@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_activity_bookcase_bookcase_list"
+        app:showAsAction="always"
+        android:title="@string/bookcase_list"/>
+    <item
+        android:id="@+id/menu_activity_bookcase_book_align"
+        app:showAsAction="always"
+        android:title="@string/book_list_align"/>
+    <item
+        android:id="@+id/menu_activity_bookcase_list_style"
+        app:showAsAction="always"
+        android:title="@string/book_list_view_style"/>
+</menu>

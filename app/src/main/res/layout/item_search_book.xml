@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:paddingLeft="@dimen/item_search_profile_margin"
+    android:paddingRight="16dp"
+    android:background="@drawable/selector_book_list_item"
+    android:orientation="horizontal">
+    <!-- android:background="?attr/selectableItemBackground" -->
+    <ImageView
+        android:id="@+id/ivItemBookThumb"
+        android:layout_width="48dp"
+        android:layout_height="66.67dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!--
+        android:layout_marginStart="@dimen/item_search_profile_margin"
+    -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginLeft="@dimen/item_search_profile_margin"
+        app:layout_constraintLeft_toRightOf="@id/ivItemBookThumb"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/tvBookTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="title" />
+        <TextView
+            android:id="@+id/tvAuthors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:text="authors" />
+        <TextView
+            android:id="@+id/tvPublisher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:text="publisher"/>
+        <TextView
+            android:id="@+id/tvDatetime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:text="datetime"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

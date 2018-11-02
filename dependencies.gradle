@@ -1,0 +1,28 @@
+ext{
+
+    // Build configuration
+    minSdkVersion = 24
+    compileSdkVersion = 28
+    targetSdkVersion =  28
+
+    // Gradle plugin
+    androidPluginVersion = '3.1.3'
+
+    //Library
+    lifecycleVersion = '1.1.1'
+    kotlinVersion = '1.2.51'
+    supportLibVersion = '27.1.1'
+    constraintLayoutVersion = '1.1.2'
+    daggerVersion = '2.17'
+    rxJavaVersion = '2.2.1'
+    rxAndroidVersion = '2.1.0'
+    retrofitVersion = '2.4.0'
+    okHttpVersion ='3.11.0'
+    rxBindingVersion = '2.1.1'
+    glideVersion = '4.8.0'
+    ankoVersion = '0.10.6'
+    mobileVisionVersion	= '15.0.2'
+    roomVersion = '1.1.1'
+    zxingVersion = '3.6.0'
+    zxingCoreVision = '3.3.0'
+}
