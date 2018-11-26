@@ -42,7 +42,7 @@ class SearchBookActivity:DaggerAppCompatActivity(),
     override fun onItemClick(bookInfo: BookInfo) {
         alert{
             val addBook = getString(R.string.add_msg)
-            title = String.format(addBook, bookInfo.title)
+            message = String.format(addBook, bookInfo.title)
             yesButton {
                 var date = Calendar.getInstance().time
                 with(bookInfo){
@@ -198,7 +198,6 @@ class SearchBookActivity:DaggerAppCompatActivity(),
 
     private fun searchBook(query: String, curPage:Int){
         disposable += viewModel.searchBook(query, curPage)
-        
     }
 
     companion object {
