@@ -30,7 +30,6 @@ constructor(context:Context, attrs:AttributeSet?=null, defStyleAtt:Int = 0)
         var visibleItemCount = this.childCount
         var totalItemCount = layoutManager.itemCount
         var firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-        //Log.d(TAG, "isLoading >>>> " + isLoading)
         if(!isLoading && (totalItemCount - visibleItemCount)
                         <= (firstVisibleItem + visibleThreshold)){
             isLoading = true
