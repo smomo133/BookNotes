@@ -198,6 +198,7 @@ class SearchBookActivity:DaggerAppCompatActivity(),
 
     private fun searchBook(query: String, curPage:Int){
         disposable += viewModel.searchBook(query, curPage)
+        
     }
 
     companion object {
