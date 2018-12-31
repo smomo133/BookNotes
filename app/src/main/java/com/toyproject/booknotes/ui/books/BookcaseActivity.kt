@@ -96,44 +96,6 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_activity_bookcase, menu)
 
-        menuSearch = menu.findItem(R.id.menu_activity_bookcase_search)
-        searchView = (menuSearch.actionView as SearchView)
-
-        viewDisposables += searchView.queryTextChangeEvents()
-                .filter { it.isSubmitted }
-                .map{it.queryText()}
-                .filter{ it.isNotEmpty()}
-                .map{ it.toString()}
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { query->
-                    hideSoftKeyboard()
-                    collapseSearchView()
-                    searchBooks(query)
-                }
-        val expandListener = object : MenuItem.OnActionExpandListener{
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                when(item?.itemId){
-                    R.id.menu_activity_bookcase_search -> {
-                        menu.setGroupVisible(R.id.group_menu_search_result, true)
-                        supportActionBar?.setTitle(R.string.search_result)
-                    }
-                }
-                return true
-            }
-
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                when(item?.itemId){
-                    R.id.menu_activity_bookcase_search -> {
-                        menu.setGroupVisible(R.id.group_menu_book_case, false)
-                    }
-                }
-                return true
-            }
-        }
-
-        val actionMenuItem = menu?.findItem(R.id.menu_activity_bookcase_search)
-        actionMenuItem?.setOnActionExpandListener(expandListener)
-
         menu?.findItem(R.id.menu_activity_bookcase_add).actionView.setOnClickListener {
             showAddBookMenu(it)
         }
@@ -187,7 +149,7 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
         if(!isEditOpen)     isEditVisible = View.GONE
         menu.setGroupVisible(R.id.group_menu_edit, isEditOpen)
         menu.setGroupVisible(R.id.group_menu_book_case, !isEditOpen)
-        menuSearch?.run{setVisible(!isEditOpen)}
+        //menuSearch?.run{setVisible(!isEditOpen)}
         adapter.setToggleVisible(isEditVisible)
     }
 
