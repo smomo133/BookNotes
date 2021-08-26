@@ -1,25 +1,27 @@
 package com.toyproject.booknotes.ui.detail
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.toyproject.booknotes.R
-import kotlinx.android.synthetic.main.fragment_review.*
 import java.lang.Exception
-import android.arch.lifecycle.LifecycleRegistry
-import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.ViewModelProvider
+import com.toyproject.booknotes.databinding.FragmentReviewBinding
 
-class ReviewInputFragment:Fragment() {
+class ReviewInputFragment: Fragment() {
 
     lateinit var viewModel:DetailBookInfoViewModel
     private var viewLifecycleOwner:ViewLifecycleOwner? = null
     private var callBack:OnFragmentListener? = null
+
+    private var _binding:FragmentReviewBinding? = null
+    private val binding get() = _binding!!
 
     companion object {
         fun newInstance():ReviewInputFragment{
@@ -41,8 +43,30 @@ class ReviewInputFragment:Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        openSoftKeyboard(binding.etReview)
+        binding.etReview.setText(viewModel.bookInfo.review)
+        binding.btReviewSave.setOnClickListener {
+            viewModel.bookInfo.review = binding.etReview.text.toString()
+            hideSoftKeyboard(binding.etReview)
+            callBack?.onFinish()
+        }
+
+        binding.btReviewCancel.setOnClickListener{
+            hideSoftKeyboard(binding.etReview)
+            callBack?.onFinish()
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         viewLifecycleOwner = ViewLifecycleOwner()
         viewLifecycleOwner?.lifecycle!!.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+
+        viewModel = activity?.run{
+            ViewModelProvider(this).get(DetailBookInfoViewModel::class.java)
+        } ?: throw Exception("Invalid Activity")
     }
 
     override fun onStart() {
@@ -71,35 +95,18 @@ class ReviewInputFragment:Fragment() {
             it.lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
             viewLifecycleOwner = null
         }
+        _binding = null
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_review, container, false)
+    override fun onCreateView(inflater: LayoutInflater,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        _binding = FragmentReviewBinding.inflate(inflater, container, false)
+        val view = binding.root
         return view
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        viewModel = activity?.run{
-            ViewModelProviders.of(this).get(DetailBookInfoViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
-
-        openSoftKeyboard(etReview)
-        etReview.setText(viewModel.bookInfo.review)
-        btReviewSave.setOnClickListener {
-            viewModel.bookInfo.review = etReview.text.toString()
-            hideSoftKeyboard(etReview)
-            callBack?.onFinish()
-        }
-
-        btReviewCancel.setOnClickListener{
-            hideSoftKeyboard(etReview)
-            callBack?.onFinish()
-        }
-    }
-
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
             callBack = activity as OnFragmentListener

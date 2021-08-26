@@ -1,10 +1,8 @@
 package com.toyproject.booknotes.util
 
-import android.arch.persistence.room.TypeConverter
+
+import androidx.room.TypeConverter
 import com.google.gson.Gson
-import io.reactivex.annotations.NonNull
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class Converters {

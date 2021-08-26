@@ -1,7 +1,7 @@
 package com.toyproject.booknotes.di.ui
 
-import android.arch.persistence.room.Room
 import android.content.Context
+import androidx.room.Room
 import com.toyproject.booknotes.data.BookInfoDao
 import com.toyproject.booknotes.data.BookInfoDatabase
 import dagger.Module

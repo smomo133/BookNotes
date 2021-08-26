@@ -1,24 +1,24 @@
 package com.toyproject.booknotes.ui.search
 
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuItem
-import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChangeEvents
 import dagger.android.support.DaggerAppCompatActivity
 import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
+import com.toyproject.booknotes.databinding.ActivityBookSearchBinding
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoClearedDisposable
 import com.toyproject.booknotes.ui.books.BookcaseActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.activity_book_search.*
 import org.jetbrains.anko.*
 import java.util.*
 import javax.inject.Inject
@@ -26,7 +26,7 @@ import javax.inject.Inject
 class SearchBookActivity:DaggerAppCompatActivity(),
         SearchBookAdapter.ItemClickListener, SearchBookRecyclerView.LoadListener {
     internal lateinit var menuSearch:MenuItem
-    internal lateinit var searchView:SearchView
+    internal lateinit var searchView: SearchView
     internal val disposable = AutoClearedDisposable(this)
     internal val viewDisposables
                 = AutoClearedDisposable(this, false)
@@ -38,6 +38,8 @@ class SearchBookActivity:DaggerAppCompatActivity(),
     private var isLoadNext:Boolean = false
     private var isLoading:Boolean = false
     private var lastKeyword:String? = null
+
+    private lateinit var binding:ActivityBookSearchBinding
 
     override fun onItemClick(bookInfo: BookInfo) {
         alert{
@@ -65,15 +67,19 @@ class SearchBookActivity:DaggerAppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_book_search)
-        setSupportActionBar(tbSearchBook)
+        binding = ActivityBookSearchBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[SearchBookViewModel::class.java]
+        setSupportActionBar(binding.tbSearchBook)
+
+        //viewModel = ViewModelProviders.of(this, viewModelFactory)[SearchBookViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory).get(SearchBookViewModel::class.java)
 
         lifecycle += disposable
         lifecycle += viewDisposables
 
-        with(rvActivitySearchList){
+        with(binding.rvActivitySearchList){
             layoutManager = LinearLayoutManager(this@SearchBookActivity)
             adapter = this@SearchBookActivity.adapter
             setOnLoadListener(this@SearchBookActivity)
@@ -89,7 +95,7 @@ class SearchBookActivity:DaggerAppCompatActivity(),
                             if(!isLoadNext)     setItems(documents.value)
                             else {
                                 addItems(documents.value)
-                                rvActivitySearchList.isLoading = false
+                                binding.rvActivitySearchList.isLoading = false
                             }
                         }
                     }
@@ -161,25 +167,25 @@ class SearchBookActivity:DaggerAppCompatActivity(),
 
 
     private fun showError(message:String?){
-        with(tvActivitySearchMessage){
+        with(binding.tvActivitySearchMessage){
             text = message ?: "Unexpected error"
             visibility = View.VISIBLE
         }
     }
 
     private fun hideError(){
-        with(tvActivitySearchMessage){
+        with(binding.tvActivitySearchMessage){
             text = ""
             visibility = View.GONE
         }
     }
 
     private fun showProgress(){
-        pbActivitySearch.visibility = View.VISIBLE
+        binding.pbActivitySearch.visibility = View.VISIBLE
     }
 
     private fun hideProgress(){
-        pbActivitySearch.visibility = View.GONE
+        binding.pbActivitySearch.visibility = View.GONE
     }
 
     private fun updateTitle(query:String){

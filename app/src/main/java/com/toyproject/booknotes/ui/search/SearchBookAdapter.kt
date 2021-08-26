@@ -1,41 +1,43 @@
 package com.toyproject.booknotes.ui.search
 
-import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
+import com.toyproject.booknotes.databinding.ItemSearchBookBinding
 import com.toyproject.booknotes.util.TextUtil
-import kotlinx.android.synthetic.main.item_search_book.view.*
-import java.util.*
 
-class SearchBookAdapter :RecyclerView.Adapter<SearchBookAdapter.BookHolder>(){
+class SearchBookAdapter : RecyclerView.Adapter<SearchBookAdapter.BookHolder>(){
 
     private var items:MutableList<BookInfo> = mutableListOf()
     private var listener : ItemClickListener? = null
+    private lateinit var binding:ItemSearchBookBinding
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookHolder
-        = BookHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookHolder{
+        binding = ItemSearchBookBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+        return BookHolder(binding)
+    }
 
     override fun onBindViewHolder(holder: BookHolder, position: Int) {
+        //holder.bind(items[position])
         items[position].let { info ->
             with(holder.itemView){
                     Glide
                             .with(context)
                             .load(info.thumbnail)
-                            .into(ivItemBookThumb)
+                            .into(binding.ivItemBookThumb)
 
-                tvBookTitle.text = info.title
-                tvAuthors.setText("")
+                binding.tvBookTitle.text = info.title
+                binding.tvAuthors.setText("")
 
                 info.authors?.let{
-                    tvAuthors.text = TextUtil.commaEllipsize(it)
+                    binding.tvAuthors.text = TextUtil.commaEllipsize(it)
                 }
-                tvPublisher.text = info.publisher
-                info.datetime?.let{tvDatetime.text = TextUtil.convertISOFormatDateStr(info.datetime)}
+                binding.tvPublisher.text = info.publisher
+                info.datetime?.let{binding.tvDatetime.text = TextUtil.convertISOFormatDateStr(info.datetime)}
                 setOnClickListener { listener?.onItemClick(info) }
             }
         }
@@ -67,14 +69,13 @@ class SearchBookAdapter :RecyclerView.Adapter<SearchBookAdapter.BookHolder>(){
         notifyDataSetChanged()
     }
 
-    class BookHolder(parent:ViewGroup): RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_search_book,parent,false))
+    class BookHolder(private val binding: ItemSearchBookBinding)
+        : RecyclerView.ViewHolder(binding.root){
+    }
 
     interface ItemClickListener{
         fun onItemClick(bookInfo:BookInfo)
     }
-
 
     companion object {
         val TAG = "SearchBookAdapter"

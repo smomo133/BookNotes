@@ -1,6 +1,6 @@
 package com.toyproject.booknotes.ui.barcode
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.toyproject.booknotes.api.SearchBookApi
 import com.toyproject.booknotes.api.model.BookInfo
 import com.toyproject.booknotes.data.BookInfoDao

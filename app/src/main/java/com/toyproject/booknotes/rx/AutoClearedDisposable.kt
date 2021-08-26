@@ -1,17 +1,17 @@
 package com.toyproject.booknotes.rx
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleObserver
-import android.arch.lifecycle.OnLifecycleEvent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 class AutoClearedDisposable(
-        private val lifecycleOwner:AppCompatActivity,
+        private val lifecycleOwner: AppCompatActivity,
         private val alwaysClearOnStop:Boolean = true,
         private val compositeDisposable: CompositeDisposable = CompositeDisposable())
-    :LifecycleObserver {
+    : LifecycleObserver {
 
     fun add(disposable: Disposable){
         check(lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.INITIALIZED))

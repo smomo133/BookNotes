@@ -18,13 +18,13 @@ package com.toyproject.booknotes.ui.camera
 import android.Manifest
 import android.content.Context
 import android.content.res.Configuration
-import android.support.annotation.RequiresPermission
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import org.jetbrains.anko.longToast
 import com.google.android.gms.vision.CameraSource
 import com.toyproject.booknotes.ui.barcode.BarcodeGraphic

@@ -3,13 +3,13 @@ package com.toyproject.booknotes.ui.barcode
 import android.Manifest
 import android.app.AlertDialog
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProviders
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.vision.CameraSource
@@ -18,6 +18,7 @@ import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
 import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
+import com.toyproject.booknotes.databinding.ActivityBarcodeScanBinding
 import com.toyproject.booknotes.ui.camera.CameraSourcePreview
 import com.toyproject.booknotes.ui.camera.GraphicOverlay
 import dagger.android.support.DaggerAppCompatActivity
@@ -25,7 +26,6 @@ import javax.inject.Inject
 import org.jetbrains.anko.longToast
 import java.io.File
 import java.io.IOException
-import kotlinx.android.synthetic.main.activity_barcode_scan.*
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoClearedDisposable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -44,6 +44,8 @@ class BarcodeScanActivity:DaggerAppCompatActivity(), BarcodeGraphicTracker.Barco
     lateinit var mGraphicOverlay:GraphicOverlay<BarcodeGraphic>
     lateinit var mPreview:CameraSourcePreview
 
+    private lateinit var binding:ActivityBarcodeScanBinding
+
     companion object {
         val TAG =  "BarcodeScanActivity"
         private val RC_HANDLE_GMS:Int = 9001
@@ -52,10 +54,11 @@ class BarcodeScanActivity:DaggerAppCompatActivity(), BarcodeGraphicTracker.Barco
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_barcode_scan)
-        setSupportActionBar(tbBarcodeTop)
+        binding = ActivityBarcodeScanBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.tbBarcodeTop)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[BarcodeScanViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory).get(BarcodeScanViewModel::class.java)
 
         lifecycle += disposable
         lifecycle += viewDisposables
@@ -187,11 +190,11 @@ class BarcodeScanActivity:DaggerAppCompatActivity(), BarcodeGraphicTracker.Barco
     }
 
     private fun showProgress(){
-        pbActivityBarcode.visibility = View.VISIBLE
+        binding.pbActivityBarcode.visibility = View.VISIBLE
     }
 
     private fun hideProgress(){
-        pbActivityBarcode.visibility = View.GONE
+        binding.pbActivityBarcode.visibility = View.GONE
     }
 
     override fun onResume() {

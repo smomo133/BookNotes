@@ -2,18 +2,20 @@ ext{
 
     // Build configuration
     minSdkVersion = 24
-    compileSdkVersion = 28
-    targetSdkVersion =  28
+    compileSdkVersion = 30
+    targetSdkVersion =  30
 
     // Gradle plugin
-    androidPluginVersion = '3.2.1'
+    //androidPluginVersion = '3.2.1'
+    androidPluginVersion = '4.1.3'
 
     //Library
     lifecycleVersion = '1.1.1'
-    kotlinVersion = '1.2.51'
+    //kotlinVersion = '1.2.51'
     supportLibVersion = '27.1.1'
     constraintLayoutVersion = '1.1.2'
-    daggerVersion = '2.17'
+    //daggerVersion = '2.17'
+    daggerVersion = '2.35.1'
     rxJavaVersion = '2.2.1'
     rxAndroidVersion = '2.1.0'
     retrofitVersion = '2.4.0'
@@ -22,7 +24,16 @@ ext{
     glideVersion = '4.8.0'
     ankoVersion = '0.10.6'
     mobileVisionVersion	= '15.0.2'
-    roomVersion = '1.1.1'
+    //roomVersion = '1.1.1'
     zxingVersion = '3.6.0'
     zxingCoreVision = '3.3.0'
+
+    kotlin_version = '1.4.32'
+    room_version = '2.3.0'
+    //room_version = '2.2.5'
+    hilt_version = '2.28-alpha'
+    ktx_viewmodel_version = '2.3.1'
+    ktx_appcompat_version = '1.3.0'
+    ktx_annotation_version = '1.2.0'
+    dagger_version = '2.38'
 }

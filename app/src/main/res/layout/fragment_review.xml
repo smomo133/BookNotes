@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +19,8 @@
             android:text="@string/cancel"
             app:layout_constraintStart_toStartOf="parent"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:background="?android:attr/selectableItemBackground"
+            tools:ignore="MissingConstraints" />
         <Button
             android:id="@+id/btReviewSave"
             android:layout_width="wrap_content"
@@ -26,8 +28,9 @@
             android:text="@string/save"
             app:layout_constraintRight_toRightOf="parent"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:background="?android:attr/selectableItemBackground"/>
-    </android.support.constraint.ConstraintLayout>
+            android:background="?android:attr/selectableItemBackground"
+            tools:ignore="MissingConstraints" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
     <EditText
         android:id="@+id/etReview"
         android:layout_width="match_parent"
@@ -40,4 +43,4 @@
         android:gravity="top"
         android:background="@android:color/white"
         android:inputType="textMultiLine"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

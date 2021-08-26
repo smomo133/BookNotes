@@ -1,18 +1,18 @@
 package com.toyproject.booknotes.ui.books
 
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.SearchView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.jakewharton.rxbinding2.support.v7.widget.queryTextChangeEvents
+import androidx.appcompat.widget.PopupMenu
+import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
+import com.toyproject.booknotes.databinding.ActivityBookcaseBinding
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoActivateDisposable
 import com.toyproject.booknotes.rx.AutoClearedDisposable
@@ -23,8 +23,6 @@ import com.toyproject.booknotes.ui.search.SearchBookActivity
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_book_search.*
-import kotlinx.android.synthetic.main.activity_bookcase.*
 import org.jetbrains.anko.*
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
@@ -32,9 +30,12 @@ import javax.inject.Inject
 class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.BookItemClickListener{
 
     private lateinit var menuSearch: MenuItem
-    private lateinit var searchView:SearchView
+    private lateinit var searchView: SearchView
+    private lateinit var viewModel:BookcaseViewModel
+    private lateinit var binding:ActivityBookcaseBinding
 
     private var checkItems:MutableList<BookInfo> = mutableListOf()
+    private var isEditOpen:Boolean = false
 
     private val disposables = AutoClearedDisposable(this)
     private val viewDisposables = AutoClearedDisposable(this, false)
@@ -42,23 +43,21 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
     @Inject lateinit var viewModelFactory:BookcaseViewModelFactory
     @Inject lateinit var adapter: BookcaseAdapter
 
-    private lateinit var viewModel:BookcaseViewModel
-    private var isEditOpen:Boolean = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bookcase)
+        binding = ActivityBookcaseBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        setSupportActionBar(tb_bookcase_top)
+        setSupportActionBar(binding.tbBookcaseTop)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[BookcaseViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory).get(BookcaseViewModel::class.java)
 
         lifecycle += disposables
         lifecycle += viewDisposables
 
         loadBooklist()
 
-        with(rvActvityBookcaseList){
+        with(binding.rvActvityBookcaseList){
             layoutManager = LinearLayoutManager(this@BookcaseActivity)
             adapter = this@BookcaseActivity.adapter
         }
@@ -154,14 +153,14 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
     }
 
     private fun showMessage(message:String?){
-        with(tvActivityBookMessage){
+        with(binding.tvActivityBookMessage){
             text = message ?: "Unexpected error"
             visibility = View.VISIBLE
         }
     }
 
     private fun hideMessage(){
-        with(tvActivityBookMessage){
+        with(binding.tvActivityBookMessage){
             text = ""
             visibility = View.GONE
         }

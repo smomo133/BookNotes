@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+//apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId "com.toyproject.booknotes"
@@ -13,32 +13,43 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
+
+    buildFeatures.viewBinding true
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
-    implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
-    implementation "com.android.support:recyclerview-v7:$supportLibVersion"
-    implementation "com.android.support:support-v4:$supportLibVersion"
-    implementation "com.android.support:design:$supportLibVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "androidx.annotation:annotation:$ktx_annotation_version"
+    implementation "androidx.appcompat:appcompat:$ktx_appcompat_version"
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    implementation "android.arch.lifecycle:extensions:$lifecycleVersion"
-    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+
+//    implementation "com.google.dagger:hilt-android:$hilt_version"
+//    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -48,14 +59,17 @@ dependencies {
     implementation "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:$rxBindingVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation "org.jetbrains.anko:anko:$ankoVersion"
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation "android.arch.persistence.room:rxjava2:$roomVersion"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-rxjava2:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
     implementation "com.google.android.gms:play-services-vision:$mobileVisionVersion"
     implementation ("com.journeyapps:zxing-android-embedded:$zxingVersion") { transitive = false }
     implementation "com.google.zxing:core:$zxingCoreVision"
-    kapt "android.arch.persistence.room:compiler:$roomVersion"
 
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     testImplementation 'junit:junit:4.12'
+    testImplementation "androidx.room:room-testing:$room_version"
 }

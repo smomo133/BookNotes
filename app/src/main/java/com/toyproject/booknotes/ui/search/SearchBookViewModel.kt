@@ -1,8 +1,6 @@
 package com.toyproject.booknotes.ui.search
 
-import android.arch.lifecycle.ViewModel
-import android.util.Log
-import android.widget.Toast
+import androidx.lifecycle.ViewModel
 import com.toyproject.booknotes.api.SearchBookApi
 import com.toyproject.booknotes.api.model.BookInfo
 import com.toyproject.booknotes.data.BookInfoDao
@@ -61,7 +59,6 @@ class SearchBookViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ documents ->
                 allBookList.addAll(documents)
-                //searchResult.onNext(optionOf(documents))
                 searchResult.onNext(optionalOf(allBookList))
                 pageNum.onNext(curPage)
             }){

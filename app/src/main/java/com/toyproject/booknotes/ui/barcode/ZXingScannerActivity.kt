@@ -1,11 +1,9 @@
 package com.toyproject.booknotes.ui.barcode
 
 import android.Manifest
-import android.arch.lifecycle.ViewModelProviders
 import com.toyproject.booknotes.R
 import android.os.Bundle
 import com.google.zxing.integration.android.IntentIntegrator
-import kotlinx.android.synthetic.main.activity_zxing_scanner.*
 import android.content.Intent
 import android.view.View
 import com.toyproject.booknotes.api.model.BookInfo
@@ -15,7 +13,9 @@ import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 import android.content.pm.PackageManager
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import com.toyproject.booknotes.databinding.ActivityZxingScannerBinding
 import com.toyproject.booknotes.ui.books.BookcaseActivity
 import org.jetbrains.anko.*
 import java.util.*
@@ -28,6 +28,7 @@ class ZXingScannerActivity:DaggerAppCompatActivity(){
     @Inject lateinit var viewModelFactory: BarcodeScanVIewModelFactory
     lateinit var intentIntegrator:IntentIntegrator
     var isSearching:Boolean = false
+    private lateinit var binding:ActivityZxingScannerBinding
 
     companion object {
         val TAG = "ZXingScannerActivity"
@@ -36,8 +37,12 @@ class ZXingScannerActivity:DaggerAppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_zxing_scanner)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[BarcodeScanViewModel::class.java]
+
+        binding = ActivityZxingScannerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        //viewModel = ViewModelProviders.of(this, viewModelFactory)[BarcodeScanViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory).get(BarcodeScanViewModel::class.java)
         lifecycle += disposable
         lifecycle += viewDisposables
 
@@ -132,11 +137,11 @@ class ZXingScannerActivity:DaggerAppCompatActivity(){
     }
 
     private fun showProgress(){
-        pbActivityZxingScanner.visibility = View.VISIBLE
+        binding.pbActivityZxingScanner.visibility = View.VISIBLE
     }
 
     private fun hideProgress(){
-        pbActivityZxingScanner.visibility = View.GONE
+        binding.pbActivityZxingScanner.visibility = View.GONE
     }
 
     override fun onPause() {

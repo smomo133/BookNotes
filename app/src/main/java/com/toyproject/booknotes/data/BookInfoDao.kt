@@ -1,6 +1,6 @@
 package com.toyproject.booknotes.data
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.toyproject.booknotes.api.model.BookInfo
 import io.reactivex.Flowable
 

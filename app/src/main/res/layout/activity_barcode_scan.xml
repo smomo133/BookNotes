@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- android.support.constraint.ConstraintLayou -->
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/topLayout"
@@ -11,13 +11,14 @@
     android:keepScreenOn="true"
     tools:context=".ui.barcode.BarcodeScanActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbBarcodeTop"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/ToolbarTheme"/>
+        android:theme="@style/ToolbarTheme"
+        tools:ignore="MissingConstraints" />
 
     <com.toyproject.booknotes.ui.camera.CameraSourcePreview
         android:id="@+id/preview"
@@ -42,4 +43,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:visibility="visible" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

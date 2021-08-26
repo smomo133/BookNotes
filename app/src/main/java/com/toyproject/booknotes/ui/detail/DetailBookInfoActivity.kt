@@ -1,24 +1,25 @@
 package com.toyproject.booknotes.ui.detail
 
-import android.arch.lifecycle.ViewModelProviders
-import com.toyproject.booknotes.R
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
 import android.widget.RadioButton
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
+import com.toyproject.booknotes.databinding.ActivityDetailBookinfoBinding
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoClearedDisposable
 import com.toyproject.booknotes.util.TextUtil
 import dagger.android.support.DaggerAppCompatActivity
-import kotlinx.android.synthetic.main.activity_detail_bookinfo.*
 import org.jetbrains.anko.*
-import org.jetbrains.anko.sdk27.coroutines.textChangedListener
 import java.util.*
 import javax.inject.Inject
+
 
 class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFragmentListener {
 
@@ -28,6 +29,7 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
     lateinit var viewModel:DetailBookInfoViewModel
     @Inject lateinit var viewModelFactory: DetailBookInfoViewModelFactory
     var reviewFragment:ReviewInputFragment? = null
+    private lateinit var binding:ActivityDetailBookinfoBinding
 
     companion object {
         const val TAG = "DetailBookInfoActivity"
@@ -38,10 +40,12 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_bookinfo)
-        setSupportActionBar(tbDetailPage)
+        binding = ActivityDetailBookinfoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[DetailBookInfoViewModel::class.java]
+        setSupportActionBar(binding.tbDetailPage)
+
+        viewModel = ViewModelProvider(this, viewModelFactory).get(DetailBookInfoViewModel::class.java)
         lifecycle += disposable
         lifecycle += viewDisposable
 
@@ -56,7 +60,7 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.menu_activity_detail_save->{
+            R.id.menu_activity_detail_save -> {
                 alert(getString(R.string.save_msg)) {
                     yesButton {
                         viewModel.updateBookInfo(viewModel.bookInfo)
@@ -67,13 +71,13 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
                 return true
             }
 
-            R.id.menu_activity_detail_delete->{
-                alert(getString(R.string.delete_msg)){
+            R.id.menu_activity_detail_delete -> {
+                alert(getString(R.string.delete_msg)) {
                     yesButton {
                         viewModel.removeBookInfo(viewModel.bookInfo)
                         finish()
                     }
-                    noButton {  }
+                    noButton { }
                 }.show()
                 return true
             }
@@ -83,11 +87,11 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
 
     override fun onFinish() {
         reviewFragment?.let {
-            supportFragmentManager.beginTransaction().remove(reviewFragment).commit()
+            supportFragmentManager.beginTransaction().remove(reviewFragment!!).commit()
         }
         supportActionBar!!.show()
         viewModel.bookInfo.review?.let{
-            tvWriteReview.text = it
+            binding.tvWriteReview.text = it
         }
     }
 
@@ -96,56 +100,61 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
             Glide
                     .with(applicationContext)
                     .load(it.thumbnail)
-                    .into(ivDetailBookThumb)
-            tvDetailBookTitle.text = it.title
-            tvDetailBookAuthor.text = TextUtil.commaEllipsize(it.authors)
-            tvDetailBookPublisher.text = it.publisher
+                    .into(binding.ivDetailBookThumb)
+            binding.tvDetailBookTitle.text = it.title
+            binding.tvDetailBookAuthor.text = TextUtil.commaEllipsize(it.authors)
+            binding.tvDetailBookPublisher.text = it.publisher
             it.translators?.let {
-                tvDetailBookTranslator.text = TextUtil.commaEllipsize(it)
+                binding.tvDetailBookTranslator.text = TextUtil.commaEllipsize(it)
             }
-            it.datetime?.let{tvDetailBookDatetime.text = TextUtil.convertISOFormatDateStr(it)}
-            it.price?.let{tvDetailBookPrice.text = it.toString() + getString(R.string.won)}
-            with(tvDetailBookPurchase){
-                it.purchase?.let{
-                    setText(it)}
-                textChangedListener {
-                    afterTextChanged {
+            it.datetime?.let{
+                binding.tvDetailBookDatetime.text = TextUtil.convertISOFormatDateStr(it)
+            }
+            it.price?.let{
+                binding.tvDetailBookPrice.text = it.toString() + getString(R.string.won)
+            }
+            with(binding.tvDetailBookPurchase){
+                it.purchase?.let{setText(it)}
+                addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(text: Editable) {
                         text?.let {
                             viewModel.bookInfo.purchase = it.toString()
                         }
                     }
-                }
+                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+                })
             }
+
             //
-            with(tvDetailBookReadStartDate){
+            with(binding.tvDetailBookReadStartDate){
                 setReadStartDay(it.readStartDate)
                 setOnClickListener { showDateDialog(viewModel.bookInfo.readStartDate, START_DAY) }
             }
             //
-            with(tvDetailBookReadEndDate){
+            with(binding.tvDetailBookReadEndDate){
                 setReadEndDay(it.readEndDate)
                 setOnClickListener { showDateDialog(viewModel.bookInfo.readEndDate, END_DAY) }
             }
             //
-            with(rgBookType){
+            with(binding.rgBookType){
                 (getChildAt(it.bookType) as RadioButton).isChecked = true
-                setOnCheckedChangeListener {
-                    radioGroup, i ->
+                setOnCheckedChangeListener { radioGroup, i ->
                     when(i){
                         R.id.rbPaperBook -> it.bookType = 0
                         R.id.rbEBook -> it.bookType = 1
-                        R.id.rbEtcBook ->it.bookType = 2
+                        R.id.rbEtcBook -> it.bookType = 2
                     }
                 }
             }
             //
-            with(ratingBookGrade){
+            with(binding.ratingBookGrade){
                 this.rating = it.grade
                 setOnRatingBarChangeListener { ratingBar, fl, b ->
                     it.grade = fl
                 }
             }
-            with(tvWriteReview){
+            with(binding.tvWriteReview){
                 this.text = it.review
                 setOnClickListener { showReviewFragment() }
             }
@@ -156,12 +165,12 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
         reviewFragment = ReviewInputFragment.newInstance()
         supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.flContents, reviewFragment)
+                .replace(R.id.flContents, reviewFragment!!)
                 .commit()
         supportActionBar!!.hide()
     }
 
-    private fun showDateDialog(date:Date, type:String){
+    private fun showDateDialog(date: Date, type: String){
         alert {
             lateinit var datePicker: DatePicker
             var calendar = Calendar.getInstance()
@@ -188,13 +197,13 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
         }.show()
     }
 
-    private fun setReadStartDay(date:Date, isSet:Boolean = false){
-        tvDetailBookReadStartDate.text = getString(R.string.readStartDate) + " : " + TextUtil.convertDateToStr(date)
+    private fun setReadStartDay(date: Date, isSet: Boolean = false){
+        binding.tvDetailBookReadStartDate.text = getString(R.string.readStartDate) + " : " + TextUtil.convertDateToStr(date)
         if(isSet)   viewModel.bookInfo.readStartDate = date
     }
 
-    private fun setReadEndDay(date:Date, isSet:Boolean = false){
-        tvDetailBookReadEndDate.text = getString(R.string.readEndDate) + " : " + TextUtil.convertDateToStr(date)
+    private fun setReadEndDay(date: Date, isSet: Boolean = false){
+        binding.tvDetailBookReadEndDate.text = getString(R.string.readEndDate) + " : " + TextUtil.convertDateToStr(date)
         if(isSet)   viewModel.bookInfo.readEndDate = date
     }
 }

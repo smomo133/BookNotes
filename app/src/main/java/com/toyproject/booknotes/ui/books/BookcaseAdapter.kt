@@ -1,25 +1,26 @@
 package com.toyproject.booknotes.ui.books
 
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
+import com.toyproject.booknotes.databinding.ItemBookcaseListBinding
 import com.toyproject.booknotes.util.TextUtil
-import kotlinx.android.synthetic.main.item_bookcase_list.view.*
-
 
 class BookcaseAdapter: RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
 
     private var items:MutableList<BookInfo> = mutableListOf()
     private var listener: BookItemClickListener? = null
     private var toggleVisible:Int = View.GONE
+    private lateinit var binding:ItemBookcaseListBinding
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-         = ViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        binding = ItemBookcaseListBinding.inflate(LayoutInflater.from(parent.context))
+        return ViewHolder(binding)
+    }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         items[position].let{
@@ -27,17 +28,17 @@ class BookcaseAdapter: RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
             with(viewHolder.itemView){
                 Glide.with(context)
                         .load(info.thumbnail)
-                        .into(ivBookcaseListThumb)
-                tvBookcaseBookTitle.text = info.title
+                        .into(binding.ivBookcaseListThumb)
+                binding.tvBookcaseBookTitle.text = info.title
                 info.authors?.let{
-                    tvBookcaseBookAuthors.text = TextUtil.commaEllipsize(it)
+                    binding.tvBookcaseBookAuthors.text = TextUtil.commaEllipsize(it)
                 }
-                tvBookcaseBookPublisher.text = info.publisher
-                ratingBookcaseGrade.rating = info.grade
-                tbBookcaseListDelete.setOnCheckedChangeListener { compoundButton, b ->
+                binding.tvBookcaseBookPublisher.text = info.publisher
+                binding.ratingBookcaseGrade.rating = info.grade
+                binding.tbBookcaseListDelete.setOnCheckedChangeListener { compoundButton, b ->
                     listener?.onItemSelected(info, b)
                 }
-                tbBookcaseListDelete.visibility = toggleVisible
+                binding.tbBookcaseListDelete.visibility = toggleVisible
                 setOnClickListener {
                     listener?.onItemClick(info)
                 }
@@ -55,11 +56,6 @@ class BookcaseAdapter: RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
         fun onItemClick(bookInfo:BookInfo)
         fun onItemSelected(bookInfo: BookInfo, isSlected:Boolean)
     }
-
-    class ViewHolder(parent: ViewGroup):RecyclerView.ViewHolder(
-            LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_bookcase_list, parent, false))
-
 
     fun setItems(items:List<BookInfo>){
         this.items = items.toMutableList()
@@ -83,4 +79,9 @@ class BookcaseAdapter: RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
         const val LIST = 0
         const val GRID = 1
     }
+
+    class ViewHolder(private val binding:ItemBookcaseListBinding):RecyclerView.ViewHolder(binding.root){
+
+    }
+
 }

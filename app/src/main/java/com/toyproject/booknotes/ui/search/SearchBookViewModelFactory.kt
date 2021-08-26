@@ -1,7 +1,7 @@
 package com.toyproject.booknotes.ui.search
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.toyproject.booknotes.api.SearchBookApi
 import com.toyproject.booknotes.data.BookInfoDao
 

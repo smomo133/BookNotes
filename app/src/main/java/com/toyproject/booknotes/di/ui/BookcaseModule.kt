@@ -1,11 +1,9 @@
 package com.toyproject.booknotes.di.ui
 
-
 import com.toyproject.booknotes.data.BookInfoDao
 import com.toyproject.booknotes.ui.books.BookcaseActivity
 import com.toyproject.booknotes.ui.books.BookcaseAdapter
 import com.toyproject.booknotes.ui.books.BookcaseViewModelFactory
-import com.toyproject.booknotes.ui.search.SearchBookAdapter
 
 import dagger.Module
 import dagger.Provides
