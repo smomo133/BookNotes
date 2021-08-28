@@ -35,9 +35,9 @@ class SearchBookActivity:DaggerAppCompatActivity(),
     @Inject lateinit var adapter: SearchBookAdapter
 
     private var isSearchListEnd:Boolean = true
-    private var isLoadNext:Boolean = false
-    private var isLoading:Boolean = false
+    private var isSearchLoading:Boolean = false
     private var lastKeyword:String? = null
+    private var isQueryTextChange:Boolean = false
 
     private lateinit var binding:ActivityBookSearchBinding
 
@@ -58,10 +58,14 @@ class SearchBookActivity:DaggerAppCompatActivity(),
         }.show()
     }
 
-    override fun onLoadNext(curPage: Int) {
-        isLoadNext = true
+    override fun onLoadNext() {
+        if(isSearchLoading)   return
+        if(viewModel.currentPage <= MAX_PAGE-1) {
+            viewModel.currentPage++
+        } else return
+        //Log.d(TAG, "onLoadNext currentPage = ${viewModel.currentPage}")
         lastKeyword?.let {
-            disposable += viewModel.addBookItems(it, curPage)
+            disposable += viewModel.addBookItems(it, viewModel.currentPage)
         }
     }
 
@@ -73,7 +77,6 @@ class SearchBookActivity:DaggerAppCompatActivity(),
 
         setSupportActionBar(binding.tbSearchBook)
 
-        //viewModel = ViewModelProviders.of(this, viewModelFactory)[SearchBookViewModel::class.java]
         viewModel = ViewModelProvider(this, viewModelFactory).get(SearchBookViewModel::class.java)
 
         lifecycle += disposable
@@ -90,13 +93,12 @@ class SearchBookActivity:DaggerAppCompatActivity(),
                 .subscribe{ documents ->
                     with(adapter){
                         if(documents.isEmpty)   clearItems()
-                        else{
-                            //setItems(documents.value)
-                            if(!isLoadNext)     setItems(documents.value)
-                            else {
-                                addItems(documents.value)
-                                binding.rvActivitySearchList.isLoading = false
+                        else {
+                            if(isQueryTextChange){
+                                clearItems()
+                                isQueryTextChange = false
                             }
+                            setItems(documents.value)
                         }
                     }
                 }
@@ -111,10 +113,13 @@ class SearchBookActivity:DaggerAppCompatActivity(),
         viewDisposables += viewModel.isLoading
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe {isLoading ->
-                    if(isLoading)
+                    if(isLoading) {
                         showProgress()
-                    else
+                        isSearchLoading = true
+                    } else {
                         hideProgress()
+                        isSearchLoading = false
+                    }
                 }
 
         viewDisposables += viewModel.isListEnd
@@ -138,7 +143,7 @@ class SearchBookActivity:DaggerAppCompatActivity(),
                  .observeOn(AndroidSchedulers.mainThread())
                  .subscribe {
                      query->
-                        isLoadNext = false
+                        isQueryTextChange = true
                         updateTitle(query)
                         hideSoftKeyboard()
                         collapseSearchView()
@@ -149,10 +154,7 @@ class SearchBookActivity:DaggerAppCompatActivity(),
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { keyword->
                     if(keyword.isEmpty) menuSearch.expandActionView()
-                    else {
-                        lastKeyword = keyword.value
-                        updateTitle(keyword.value)
-                    }
+                    else                lastKeyword = keyword.value
                 }
         return true
     }
@@ -208,5 +210,6 @@ class SearchBookActivity:DaggerAppCompatActivity(),
 
     companion object {
         val TAG = "SearchBookActivity"
+        const val MAX_PAGE:Int = 100
     }
 }

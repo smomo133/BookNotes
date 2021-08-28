@@ -12,16 +12,11 @@ class SearchBookRecyclerView @JvmOverloads
 constructor(context:Context, attrs:AttributeSet?=null, defStyleAtt:Int = 0)
     : RecyclerView(context, attrs, defStyleAtt){
 
-    internal var isLoading:Boolean = false
-
-    private var currentPage:Int = 1
     private var listener:LoadListener? = null
-    private var previousTotal = 0
 
     companion object {
         val TAG = "SearchRecyclerView"
-        const val visibleThreshold = 4
-        const val maxPage:Int = 100
+        const val VISIBLE_THRESHOLD = 7
     }
 
     override fun onScrolled(dx: Int, dy: Int) {
@@ -31,13 +26,10 @@ constructor(context:Context, attrs:AttributeSet?=null, defStyleAtt:Int = 0)
         var visibleItemCount = this.childCount
         var totalItemCount = layoutManager.itemCount
         var firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-        if(!isLoading && (totalItemCount - visibleItemCount)
-                        <= (firstVisibleItem + visibleThreshold)){
-            isLoading = true
-            if(currentPage < maxPage - 1){
-                currentPage++
-                listener?.onLoadNext(currentPage)
-            }
+
+        if((totalItemCount - visibleItemCount)
+                        <= (firstVisibleItem + VISIBLE_THRESHOLD)){
+            listener?.onLoadNext()
         }
     }
 
@@ -50,6 +42,6 @@ constructor(context:Context, attrs:AttributeSet?=null, defStyleAtt:Int = 0)
     }
 
     interface LoadListener{
-        fun onLoadNext(curPage:Int)
+        fun onLoadNext()
     }
 }

@@ -37,6 +37,7 @@ class SearchBookViewModel(
         = BehaviorSubject.createDefault(1)
 
     var allBookList:MutableList<BookInfo> = mutableListOf()
+    var currentPage:Int = 1
 
     fun searchBook(query:String, curPage:Int):Disposable
         = api.searchBook(query, curPage)
@@ -59,7 +60,8 @@ class SearchBookViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ documents ->
                 allBookList.addAll(documents)
-                searchResult.onNext(optionalOf(allBookList))
+                //searchResult.onNext(optionalOf(allBookList))
+                searchResult.onNext(optionalOf(documents))
                 pageNum.onNext(curPage)
             }){
                 message.onNext(optionalOf(it.message ?: "Unexpected error"))

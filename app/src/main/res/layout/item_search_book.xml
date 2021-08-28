@@ -8,7 +8,6 @@
     android:paddingRight="16dp"
     android:background="@drawable/selector_book_list_item"
     android:orientation="horizontal">
-    <!-- android:background="?attr/selectableItemBackground" -->
     <ImageView
         android:id="@+id/ivItemBookThumb"
         android:layout_width="48dp"

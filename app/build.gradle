@@ -36,8 +36,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "androidx.annotation:annotation:$ktx_annotation_version"
     implementation "androidx.appcompat:appcompat:$ktx_appcompat_version"
-    implementation "androidx.recyclerview:recyclerview:1.2.1"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation "androidx.recyclerview:recyclerview:$ktx_recyclerview_version"
+    implementation "androidx.constraintlayout:constraintlayout:$ktx_constraintlayout_version"
 
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
