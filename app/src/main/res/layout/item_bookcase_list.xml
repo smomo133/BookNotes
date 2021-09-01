@@ -3,20 +3,22 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:paddingRight="@dimen/item_search_profile_margin"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingEnd="10dp"
     android:background="@drawable/selector_book_list_item"
     android:orientation="horizontal">
     <ToggleButton
         android:id="@+id/tbBookcaseListDelete"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/selector_book_delete_check"
+        app:layout_constraintWidth_percent="0.1"
         android:textOff=""
         android:textOn=""
         android:visibility="gone"/>
@@ -24,54 +26,50 @@
         android:id="@+id/ivBookcaseListThumb"
         android:layout_width="72dp"
         android:layout_height="72dp"
+        app:layout_constraintWidth_percent="0.2"
         android:src="@drawable/ic_launcher_background"
-        app:layout_goneMarginStart="@dimen/item_search_profile_margin"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tbBookcaseListDelete"
+        android:layout_marginLeft="10dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:scaleType="fitCenter"
-        android:background="@drawable/ic_book_black_24dp"/>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginLeft="@dimen/item_search_profile_margin"
-        app:layout_constraintLeft_toRightOf="@id/ivBookcaseListThumb"
-        app:layout_constraintRight_toRightOf="parent">
-        <TextView
-            android:id="@+id/tvBookcaseBookTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/title"
-            android:textColor="@color/colorPrimary"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-        <TextView
-            android:id="@+id/tvBookcaseBookAuthors"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/author"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
-        <TextView
-            android:id="@+id/tvBookcaseBookPublisher"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/publisher"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
-        <RatingBar
-            android:id="@+id/ratingBookcaseGrade"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@android:style/Widget.Material.Light.RatingBar.Small"
-            android:layout_marginTop="5dp"
-            android:numStars="5"
-            android:stepSize="1"/>
-    </LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tbBookcaseListDelete"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            app:layout_constraintWidth_percent="0.9"
+            android:paddingRight="10dp"
+            app:layout_constraintLeft_toRightOf="@id/ivBookcaseListThumb">
+            <TextView
+                android:id="@+id/tvBookcaseBookTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/colorPrimary"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            <TextView
+                android:id="@+id/tvBookcaseBookAuthors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/author"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+            <TextView
+                android:id="@+id/tvBookcaseBookPublisher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/publisher"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+            <RatingBar
+                android:id="@+id/ratingBookcaseGrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@android:style/Widget.Material.Light.RatingBar.Small"
+                android:layout_marginTop="5dp"
+                android:numStars="5"
+                android:stepSize="1"/>
+        </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

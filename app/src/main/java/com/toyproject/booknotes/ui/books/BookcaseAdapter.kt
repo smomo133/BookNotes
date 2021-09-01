@@ -23,27 +23,7 @@ class BookcaseAdapter: RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        items[position].let{
-            info->
-            with(viewHolder.itemView){
-                Glide.with(context)
-                        .load(info.thumbnail)
-                        .into(binding.ivBookcaseListThumb)
-                binding.tvBookcaseBookTitle.text = info.title
-                info.authors?.let{
-                    binding.tvBookcaseBookAuthors.text = TextUtil.commaEllipsize(it)
-                }
-                binding.tvBookcaseBookPublisher.text = info.publisher
-                binding.ratingBookcaseGrade.rating = info.grade
-                binding.tbBookcaseListDelete.setOnCheckedChangeListener { compoundButton, b ->
-                    listener?.onItemSelected(info, b)
-                }
-                binding.tbBookcaseListDelete.visibility = toggleVisible
-                setOnClickListener {
-                    listener?.onItemClick(info)
-                }
-            }
-        }
+        viewHolder.bind(items[position], listener, toggleVisible)
     }
 
     override fun getItemCount(): Int = items.size
@@ -80,8 +60,27 @@ class BookcaseAdapter: RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
         const val GRID = 1
     }
 
-    class ViewHolder(private val binding:ItemBookcaseListBinding):RecyclerView.ViewHolder(binding.root){
-
+    class ViewHolder(private val _binding:ItemBookcaseListBinding)
+        : RecyclerView.ViewHolder(_binding.root){
+        fun bind(info:BookInfo, listener: BookItemClickListener?, isDeleteVisible:Int){
+            Glide.with(_binding.root.context)
+                    .load(info.thumbnail)
+                    .into(_binding.ivBookcaseListThumb)
+            _binding.tvBookcaseBookTitle.text = info.title
+//            Log.d(TAG, "info.title = ${info.title}")
+            info.authors?.let{
+                _binding.tvBookcaseBookAuthors.text = TextUtil.commaEllipsize(it)
+            }
+            _binding.tvBookcaseBookPublisher.text = info.publisher
+            _binding.ratingBookcaseGrade.rating = info.grade
+            _binding.tbBookcaseListDelete.setOnCheckedChangeListener { compoundButton, b ->
+                listener?.onItemSelected(info, b)
+            }
+            _binding.tbBookcaseListDelete.visibility = isDeleteVisible
+            _binding.root.setOnClickListener {
+                listener?.onItemClick(info)
+            }
+        }
     }
 
 }
