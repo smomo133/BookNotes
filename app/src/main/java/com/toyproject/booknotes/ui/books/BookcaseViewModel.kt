@@ -7,14 +7,17 @@ import com.toyproject.booknotes.extension.runOnIoScheduler
 import com.toyproject.booknotes.util.SupportOptional
 import com.toyproject.booknotes.util.emptyOptional
 import com.toyproject.booknotes.util.optionalOf
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subscribers.DisposableSubscriber
+import javax.inject.Inject
 
-class BookcaseViewModel(val bookInfoDao: BookInfoDao): ViewModel() {
+@HiltViewModel
+class BookcaseViewModel @Inject constructor(val bookInfoDao: BookInfoDao): ViewModel() {
 
     val searchResult:BehaviorSubject<SupportOptional<List<BookInfo>>>
         = BehaviorSubject.createDefault(emptyOptional())

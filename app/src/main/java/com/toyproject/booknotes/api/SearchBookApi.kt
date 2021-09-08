@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 
 interface SearchBookApi {
-    @Headers("Authorization: KakaoAK {app_key}")
+    @Headers("Authorization: KakaoAK b4b94d41f5977178dd70aedd0aa8b0a9")
     @GET("/v3/search/book")
     fun searchBook(@Query("query") query: String,
                    @Query("page") page:Int = 1,

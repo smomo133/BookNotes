@@ -6,9 +6,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
@@ -16,22 +17,20 @@ import com.toyproject.booknotes.databinding.ActivityBookcaseBinding
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoActivateDisposable
 import com.toyproject.booknotes.rx.AutoClearedDisposable
-import com.toyproject.booknotes.ui.barcode.BarcodeScanActivity
 import com.toyproject.booknotes.ui.barcode.ZXingScannerActivity
 import com.toyproject.booknotes.ui.detail.DetailBookInfoActivity
 import com.toyproject.booknotes.ui.search.SearchBookActivity
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.jetbrains.anko.*
-import java.lang.IllegalArgumentException
-import javax.inject.Inject
 
-class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.BookItemClickListener{
+@AndroidEntryPoint
+class BookcaseActivity : AppCompatActivity(), AnkoLogger, BookcaseAdapter.BookItemClickListener{
 
     private lateinit var menuSearch: MenuItem
     private lateinit var searchView: SearchView
-    private lateinit var viewModel:BookcaseViewModel
+
     private lateinit var binding:ActivityBookcaseBinding
 
     private var checkItems:MutableList<BookInfo> = mutableListOf()
@@ -40,8 +39,8 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
     private val disposables = AutoClearedDisposable(this)
     private val viewDisposables = AutoClearedDisposable(this, false)
 
-    @Inject lateinit var viewModelFactory:BookcaseViewModelFactory
-    @Inject lateinit var adapter: BookcaseAdapter
+    private val viewModel:BookcaseViewModel by viewModels()
+    private lateinit var bookcaseAdapter: BookcaseAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,22 +49,22 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
 
         setSupportActionBar(binding.tbBookcaseTop)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(BookcaseViewModel::class.java)
-
         lifecycle += disposables
         lifecycle += viewDisposables
 
         loadBooklist()
 
+        bookcaseAdapter = BookcaseAdapter()
+        bookcaseAdapter.setItemClickListener(this@BookcaseActivity)
         with(binding.rvActvityBookcaseList){
             layoutManager = LinearLayoutManager(this@BookcaseActivity)
-            adapter = this@BookcaseActivity.adapter
+            adapter = this@BookcaseActivity.bookcaseAdapter
         }
 
         viewDisposables += viewModel.searchResult
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{ documents ->
-                    with(adapter){
+                    with(bookcaseAdapter){
                         if(documents.isEmpty)   clearItems()
                         else                    setItems(documents.value)
                         notifyDataSetChanged()
@@ -133,7 +132,7 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { items->
-                        with(adapter){
+                        with(bookcaseAdapter){
                             if(items.isEmpty)   clearItems()
                             else                setItems(items.value)
                             notifyDataSetChanged()
@@ -149,7 +148,7 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
         menu.setGroupVisible(R.id.group_menu_edit, isEditOpen)
         menu.setGroupVisible(R.id.group_menu_book_case, !isEditOpen)
         //menuSearch?.run{setVisible(!isEditOpen)}
-        adapter.setToggleVisible(isEditVisible)
+        bookcaseAdapter.setToggleVisible(isEditVisible)
     }
 
     private fun showMessage(message:String?){
@@ -185,7 +184,7 @@ class BookcaseActivity : DaggerAppCompatActivity(), AnkoLogger, BookcaseAdapter.
     }
 
     fun updateTitle(caseTitle:String?){
-        var numOfBook:Int = adapter.itemCount
+        var numOfBook:Int = bookcaseAdapter.itemCount
         var title:String? = caseTitle + "(" + numOfBook + ")"
         supportActionBar?.setTitle(title)
     }

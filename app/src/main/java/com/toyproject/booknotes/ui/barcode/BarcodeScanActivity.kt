@@ -9,7 +9,8 @@ import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import android.util.Log
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.vision.CameraSource
@@ -21,25 +22,24 @@ import com.toyproject.booknotes.api.model.BookInfo
 import com.toyproject.booknotes.databinding.ActivityBarcodeScanBinding
 import com.toyproject.booknotes.ui.camera.CameraSourcePreview
 import com.toyproject.booknotes.ui.camera.GraphicOverlay
-import dagger.android.support.DaggerAppCompatActivity
-import javax.inject.Inject
+
 import org.jetbrains.anko.longToast
 import java.io.File
 import java.io.IOException
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoClearedDisposable
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-
-class BarcodeScanActivity:DaggerAppCompatActivity(), BarcodeGraphicTracker.BarcodeUpdateListener{
+@AndroidEntryPoint
+class BarcodeScanActivity:AppCompatActivity(), BarcodeGraphicTracker.BarcodeUpdateListener{
 
     private var barcodeDetector: BarcodeDetector? = null
     private var mCameraSource: CameraSource? = null
 
     internal val disposable = AutoClearedDisposable(this)
     internal val viewDisposables = AutoClearedDisposable(this, false)
-    lateinit var viewModel: BarcodeScanViewModel
-    @Inject lateinit var viewModelFactory: BarcodeScanVIewModelFactory
+    private val viewModel: BarcodeScanViewModel by viewModels()
 
     lateinit var mGraphicOverlay:GraphicOverlay<BarcodeGraphic>
     lateinit var mPreview:CameraSourcePreview
@@ -57,8 +57,6 @@ class BarcodeScanActivity:DaggerAppCompatActivity(), BarcodeGraphicTracker.Barco
         binding = ActivityBarcodeScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.tbBarcodeTop)
-
-        viewModel = ViewModelProvider(this, viewModelFactory).get(BarcodeScanViewModel::class.java)
 
         lifecycle += disposable
         lifecycle += viewDisposables

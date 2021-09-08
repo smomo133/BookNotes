@@ -3,6 +3,8 @@ package com.toyproject.booknotes.di
 import com.toyproject.booknotes.api.SearchBookApi
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.CallAdapter
 import retrofit2.Converter
@@ -11,6 +13,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
 class ApiModule {
 

@@ -7,7 +7,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
 import android.widget.RadioButton
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
@@ -15,19 +16,17 @@ import com.toyproject.booknotes.databinding.ActivityDetailBookinfoBinding
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoClearedDisposable
 import com.toyproject.booknotes.util.TextUtil
-import dagger.android.support.DaggerAppCompatActivity
+import dagger.hilt.android.AndroidEntryPoint
 import org.jetbrains.anko.*
 import java.util.*
-import javax.inject.Inject
 
-
-class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFragmentListener {
+@AndroidEntryPoint
+class DetailBookInfoActivity: AppCompatActivity(), ReviewInputFragment.OnFragmentListener {
 
     internal val disposable = AutoClearedDisposable(this)
     internal val viewDisposable =
             AutoClearedDisposable(this, false)
-    lateinit var viewModel:DetailBookInfoViewModel
-    @Inject lateinit var viewModelFactory: DetailBookInfoViewModelFactory
+    private val viewModel:DetailBookInfoViewModel by viewModels()
     var reviewFragment:ReviewInputFragment? = null
     private lateinit var binding:ActivityDetailBookinfoBinding
 
@@ -45,7 +44,6 @@ class DetailBookInfoActivity:DaggerAppCompatActivity(), ReviewInputFragment.OnFr
 
         setSupportActionBar(binding.tbDetailPage)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(DetailBookInfoViewModel::class.java)
         lifecycle += disposable
         lifecycle += viewDisposable
 

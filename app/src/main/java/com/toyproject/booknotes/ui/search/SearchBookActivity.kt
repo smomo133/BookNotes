@@ -7,32 +7,33 @@ import android.view.MenuItem
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding2.support.v7.widget.queryTextChangeEvents
-import dagger.android.support.DaggerAppCompatActivity
 import com.toyproject.booknotes.R
 import com.toyproject.booknotes.api.model.BookInfo
 import com.toyproject.booknotes.databinding.ActivityBookSearchBinding
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoClearedDisposable
 import com.toyproject.booknotes.ui.books.BookcaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.jetbrains.anko.*
 import java.util.*
-import javax.inject.Inject
 
-class SearchBookActivity:DaggerAppCompatActivity(),
+@AndroidEntryPoint
+class SearchBookActivity: AppCompatActivity(),
         SearchBookAdapter.ItemClickListener, SearchBookRecyclerView.LoadListener {
     internal lateinit var menuSearch:MenuItem
     internal lateinit var searchView: SearchView
     internal val disposable = AutoClearedDisposable(this)
     internal val viewDisposables
                 = AutoClearedDisposable(this, false)
-    lateinit var viewModel:SearchBookViewModel
-    @Inject lateinit var viewModelFactory: SearchBookViewModelFactory
-    @Inject lateinit var adapter: SearchBookAdapter
+
+    private lateinit var searchBookAdapter : SearchBookAdapter
+    private val viewModel:SearchBookViewModel by viewModels()
 
     private var isSearchListEnd:Boolean = true
     private var isSearchLoading:Boolean = false
@@ -77,21 +78,21 @@ class SearchBookActivity:DaggerAppCompatActivity(),
 
         setSupportActionBar(binding.tbSearchBook)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SearchBookViewModel::class.java)
-
         lifecycle += disposable
         lifecycle += viewDisposables
 
+        searchBookAdapter = SearchBookAdapter()
+        searchBookAdapter.setItemClickListener(this@SearchBookActivity)
         with(binding.rvActivitySearchList){
             layoutManager = LinearLayoutManager(this@SearchBookActivity)
-            adapter = this@SearchBookActivity.adapter
+            adapter = this@SearchBookActivity.searchBookAdapter
             setOnLoadListener(this@SearchBookActivity)
         }
 
         viewDisposables += viewModel.searchResult
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{ documents ->
-                    with(adapter){
+                    with(searchBookAdapter){
                         if(documents.isEmpty)   clearItems()
                         else {
                             if(isQueryTextChange){

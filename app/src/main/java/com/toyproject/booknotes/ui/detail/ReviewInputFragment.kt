@@ -13,7 +13,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.ViewModelProvider
 import com.toyproject.booknotes.databinding.FragmentReviewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ReviewInputFragment: Fragment() {
 
     lateinit var viewModel:DetailBookInfoViewModel

@@ -2,6 +2,7 @@ package com.toyproject.booknotes.data
 
 import androidx.room.*
 import com.toyproject.booknotes.api.model.BookInfo
+import dagger.Binds
 import io.reactivex.Flowable
 
 @Dao

@@ -9,23 +9,22 @@ import android.view.View
 import com.toyproject.booknotes.api.model.BookInfo
 import com.toyproject.booknotes.extension.plusAssign
 import com.toyproject.booknotes.rx.AutoClearedDisposable
-import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
-import javax.inject.Inject
 import android.content.pm.PackageManager
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
 import com.toyproject.booknotes.databinding.ActivityZxingScannerBinding
 import com.toyproject.booknotes.ui.books.BookcaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 import org.jetbrains.anko.*
 import java.util.*
 
-
-class ZXingScannerActivity:DaggerAppCompatActivity(){
+@AndroidEntryPoint
+class ZXingScannerActivity:AppCompatActivity(){
     internal val disposable = AutoClearedDisposable(this)
     internal val viewDisposables = AutoClearedDisposable(this, false)
-    lateinit var viewModel: BarcodeScanViewModel
-    @Inject lateinit var viewModelFactory: BarcodeScanVIewModelFactory
+    private val viewModel:BarcodeScanViewModel by viewModels()
     lateinit var intentIntegrator:IntentIntegrator
     var isSearching:Boolean = false
     private lateinit var binding:ActivityZxingScannerBinding
@@ -41,8 +40,6 @@ class ZXingScannerActivity:DaggerAppCompatActivity(){
         binding = ActivityZxingScannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //viewModel = ViewModelProviders.of(this, viewModelFactory)[BarcodeScanViewModel::class.java]
-        viewModel = ViewModelProvider(this, viewModelFactory).get(BarcodeScanViewModel::class.java)
         lifecycle += disposable
         lifecycle += viewDisposables
 

@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import dagger.android.support.DaggerAppCompatActivity
+//import dagger.android.support.DaggerAppCompatActivity
 
     fun AppCompatActivity.replaceFragmentInActivity(fragment: Fragment, @IdRes frameId: Int) {
         supportFragmentManager.transact {

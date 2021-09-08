@@ -9,8 +9,9 @@ import com.bumptech.glide.Glide
 import com.toyproject.booknotes.api.model.BookInfo
 import com.toyproject.booknotes.databinding.ItemBookcaseListBinding
 import com.toyproject.booknotes.util.TextUtil
+import javax.inject.Inject
 
-class BookcaseAdapter: RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
+class BookcaseAdapter : RecyclerView.Adapter<BookcaseAdapter.ViewHolder>() {
 
     private var items:MutableList<BookInfo> = mutableListOf()
     private var listener: BookItemClickListener? = null
